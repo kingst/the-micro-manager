@@ -1,0 +1,13 @@
+Get oauth working
+
+Come up with some type of sessions for logged in and logged out pages
+
+Figure out caching and permissions
+
+Define stats to show (individual and teams, for a period of time):
+
+  * #of PRs
+
+  * LOC
+
+  * #of reviews
