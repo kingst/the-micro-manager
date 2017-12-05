@@ -7,7 +7,8 @@ class Session(ndb.Model):
 
 
 class User(ndb.Model):
-    github_access_token = ndb.TextProperty()
-    github_email = ndb.StringProperty()
+    """ We use the github id for our model IDs """
+    access_token = ndb.TextProperty()
+    github_user = ndb.JsonProperty()
     ctime = ndb.DateTimeProperty(auto_now_add=True)
     mtime = ndb.DateTimeProperty(auto_now=True)
