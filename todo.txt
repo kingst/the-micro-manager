@@ -1,5 +1,3 @@
-Get oauth working
-
 Come up with some type of sessions for logged in and logged out pages
 
 Figure out caching and permissions

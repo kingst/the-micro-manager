@@ -12,3 +12,5 @@ class User(ndb.Model):
     github_user = ndb.JsonProperty()
     ctime = ndb.DateTimeProperty(auto_now_add=True)
     mtime = ndb.DateTimeProperty(auto_now=True)
+    team = ndb.JsonProperty(default=[])
+    personal_token = ndb.TextProperty(default=None)
