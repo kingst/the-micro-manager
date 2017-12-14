@@ -14,3 +14,11 @@ class User(ndb.Model):
     mtime = ndb.DateTimeProperty(auto_now=True)
     team = ndb.JsonProperty(default=[])
     personal_token = ndb.TextProperty(default=None)
+
+
+class Commit(ndb.Model):
+    """ We use the URL of the commit as the model ID """
+    github_commit = ndb.JsonProperty()
+    author = ndb.StringProperty()
+    date = ndb.DateTimeProperty()
+    html_url = ndb.TextProperty()
