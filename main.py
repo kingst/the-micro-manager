@@ -13,8 +13,6 @@ import webapp2
 
 from dateutil.parser import parse
 
-import google.appengine.api.memcache as memcache
-
 import commits
 import creds
 import decorators
@@ -47,14 +45,23 @@ class HomeHtml(webapp2.RequestHandler):
 class DataFill(webapp2.RequestHandler):
     @decorators.web_page(True)
     def get(self):
-        #results = github_api._get(self.request.user, '/user/orgs')
-        #results = github_api._get(self.request.user, '/orgs/lyft/events')
-        #results = github_api.commits(self.request.user, 'armike',
-        #                             datetime
-        results = github_api.repos(self.request.user, 'lyft')
-        self.response.headers['Content-Type'] = 'text/plain'
-        #self.response.write(json.dumps(results, indent=4))
-        self.response.write(len(results))
+        for author in self.request.user.team:
+            print(author)
+            last_pr_date = datetime.datetime.utcnow() - datetime.timedelta(days=90)
+            prs = commits.query(self.request.user,
+                                author,
+                                last_pr_date,
+                                datetime.datetime.utcnow())
+            if len(prs) > 0:
+                last_pr_date = prs[0]['date']
+            commits.load_commits(self.request.user,
+                                 author,
+                                 last_pr_date,
+                                 datetime.datetime.utcnow())
+
+
+        template = JINJA_ENVIRONMENT.get_template('templates/datafill.html')
+        self.response.write(template.render({'data_fill_active': True}))
 
 
 class Prs(webapp2.RequestHandler):
@@ -125,32 +132,6 @@ class Team(webapp2.RequestHandler):
                                              'thirty_days_ago': str(datetime.date.today() - datetime.timedelta(days=30)),
                                              'today': str(datetime.date.today())}))
 
-
-class TeamOld(webapp2.RequestHandler):
-    @decorators.web_page(True)
-    def get(self):
-        team = self.request.user.team
-        team_template = []
-        start_date = self.request.get('start_date',
-                                      str(datetime.date.today() - datetime.timedelta(days=30)))
-        end_date = self.request.get('end_date', str(datetime.date.today()))
-        today = str(datetime.date.today())
-                                      
-        for member in team:
-            pass
-            #commits = query_commits(self.request.user, member,
-            #                        start_date, end_date)
-            #team_template.append({'member': member, 'commits': len(commits)})
-
-        team_template = sorted(team_template, key=lambda x: x['commits'], reverse=True)
-        template = JINJA_ENVIRONMENT.get_template('templates/team.html')
-        self.response.write(template.render({'team': team_template,
-                                             'start_date': start_date,
-                                             'end_date': end_date,
-                                             'ninty_days_ago': str(datetime.date.today() - datetime.timedelta(days=90)),
-                                             'sixty_days_ago': str(datetime.date.today() - datetime.timedelta(days=60)),
-                                             'thirty_days_ago': str(datetime.date.today() - datetime.timedelta(days=30)),
-                                             'today': str(datetime.date.today())}))
 
 
 class AddMember(webapp2.RequestHandler):
