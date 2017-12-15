@@ -65,16 +65,31 @@ class Prs(webapp2.RequestHandler):
         end_date = self.request.get('end_date', str(datetime.date.today()))
         today = str(datetime.date.today())
 
-        commits = query_commits(self.request.user, member,
-                                start_date, end_date)
+        cs = commits.query(self.request.user, member,
+                           start_date, end_date)
 
-        commits = sorted(commits, key=lambda x: x['date'], reverse=True)
-        commits = map(lambda x: {'date': parse(x['date']).strftime('%m/%d/%Y'),
-                                 'url': x['url'],
-                                 'message': x['message']},
-                      commits)
+        cs = sorted(cs, key=lambda x: x['date'], reverse=True)
+        cs = map(lambda x: {'date': x['date'].strftime('%m/%d/%Y'),
+                            'url': x['html_url'],
+                            'message': x.get('message', '')},
+                 cs)
+
+        repo_counts = {}
+        for c in cs:
+            slash_idx = c['url'].rfind('/')
+            c['repo'] = c['url'][19:slash_idx-7]
+            if not c['repo'] in repo_counts:
+                repo_counts[c['repo']] = 0
+            repo_counts[c['repo']] += 1
+            
+        repo_stats = []
+        for key in repo_counts.keys():
+            repo_stats.append({'repo': key, 'count': repo_counts[key]})
+        repo_stats = sorted(repo_stats, key=lambda x: x['count'], reverse=True)
+
         template = JINJA_ENVIRONMENT.get_template('templates/member.html')
-        self.response.write(template.render({'prs': commits,
+        self.response.write(template.render({'prs': cs,
+                                             'repo_stats': repo_stats,
                                              'member': member,
                                              'start_date': start_date,
                                              'end_date': end_date,
@@ -102,6 +117,7 @@ class Team(webapp2.RequestHandler):
 
         team = sorted(team, key=lambda k: k['commits'], reverse=True)
         self.response.write(template.render({'team': team,
+                                             'team_active': True,
                                              'start_date': start_date,
                                              'end_date': end_date,
                                              'ninty_days_ago': str(datetime.date.today() - datetime.timedelta(days=90)),

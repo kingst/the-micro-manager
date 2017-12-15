@@ -20,10 +20,16 @@ def load_commits(user, author, start_date, end_date):
 
 
 def query(user, author, start_date, end_date):
-    print()
-    print(start_date)
-    print(end_date)
-    print()
+    if isinstance(start_date, unicode):
+        start_date = start_date.encode('utf-8')
+    if isinstance(end_date, unicode):
+        end_date = end_date.encode('utf-8')
+
+    if isinstance(start_date, str):
+        start_date = parse(start_date)
+    if isinstance(end_date, str):
+        end_date = parse(end_date)
+
     commit_query = Commit.query(Commit.date >= start_date,
                                 Commit.date <= end_date,
                                 Commit.author == author).order(-Commit.date)
