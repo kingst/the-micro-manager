@@ -24,7 +24,6 @@ from models import Commit
 from models import Session
 from models import User
 
-ORG = 'lyft'
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
