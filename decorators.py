@@ -1,6 +1,7 @@
 from error import MMRedirect
 import logging
 from models import Session
+from models import User
 
 def web_page(auth_required=True):
     """Decorator for requests to web pages.
@@ -14,8 +15,10 @@ def web_page(auth_required=True):
             auth_user = None
             if 'session_token' in self.request.cookies:
                 session_token = self.request.cookies['session_token']
-                session = Session.get_by_token(session_token)
-                auth_user = session.user.get()
+                session = Session.get_by_id(session_token)
+                # XXX fixme we should be able to do this without
+                # passing in User explicitly
+                auth_user = session.user.get(User)
 
             if auth_required and auth_user is None:
                 self.redirect('/')

@@ -15,6 +15,7 @@ from dateutil.parser import parse
 
 import commits
 import creds
+import db
 import decorators
 import github_api
 import models
@@ -187,7 +188,7 @@ class Auth(webapp2.RequestHandler):
         
         result = github_api.user(access_token)
 
-        user = User.get_by_userid(result['id'])
+        user = User.get_by_id(result['id'])
         if user is None:
             user = User(id=result['id'])
 
@@ -195,7 +196,7 @@ class Auth(webapp2.RequestHandler):
         user.github_user = result
 
         user_key = user.put()
-        session_token = models.create_uuid()
+        session_token = db.create_uuid()
         session = Session(id=session_token)
         session.user = user_key
         session.put()
