@@ -1,5 +1,6 @@
 # sensitive local files
 creds.py
+micromanager.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
