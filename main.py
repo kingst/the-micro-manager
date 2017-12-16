@@ -17,6 +17,7 @@ import commits
 import creds
 import decorators
 import github_api
+import models
 from models import Commit
 from models import Session
 from models import User
@@ -27,13 +28,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
-
-
-def _create_uuid():
-    uuid = os.urandom(24).encode('base64').replace("\n","")
-    uuid = uuid.replace("/", "_").replace("+","-")
-
-    return uuid
 
 
 class HomeHtml(webapp2.RequestHandler):
@@ -193,7 +187,7 @@ class Auth(webapp2.RequestHandler):
         
         result = github_api.user(access_token)
 
-        user = User.get_by_id(result['id'])
+        user = User.get_by_userid(result['id'])
         if user is None:
             user = User(id=result['id'])
 
@@ -201,7 +195,7 @@ class Auth(webapp2.RequestHandler):
         user.github_user = result
 
         user_key = user.put()
-        session_token = _create_uuid()
+        session_token = models.create_uuid()
         session = Session(id=session_token)
         session.user = user_key
         session.put()
@@ -226,8 +220,9 @@ app = webapp2.WSGIApplication(
 
 
 def main():
-    run_wsgi_app(app)
+    from paste import httpserver
+    httpserver.serve(app, host='127.0.0.1', port='8080')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -16,8 +16,6 @@ def _get_or_post(user, path_or_url, post_data, token):
         if not user.personal_token is None:
             token = user.personal_token
 
-    print('token = ' + token)
-
     if not token is None:
         headers['Authorization'] = 'token ' + token
 

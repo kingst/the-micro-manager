@@ -30,9 +30,8 @@ def query(user, author, start_date, end_date):
     if isinstance(end_date, str):
         end_date = parse(end_date)
 
-    commit_query = Commit.query(Commit.date >= start_date,
-                                Commit.date <= end_date,
-                                Commit.author == author).order(-Commit.date)
+    commit_query = Commit.query_by_author(author, start_date, end_date)
+
     result = []
     for commit in commit_query:
         result.append({'author': commit.author,

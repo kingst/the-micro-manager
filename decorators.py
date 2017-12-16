@@ -14,7 +14,7 @@ def web_page(auth_required=True):
             auth_user = None
             if 'session_token' in self.request.cookies:
                 session_token = self.request.cookies['session_token']
-                session = Session.get_by_id(session_token)
+                session = Session.get_by_token(session_token)
                 auth_user = session.user.get()
 
             if auth_required and auth_user is None:
