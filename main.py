@@ -153,7 +153,7 @@ class CheatCode(webapp2.RequestHandler):
     @decorators.web_page(True)
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/cheat_code.html')
-        self.response.write(template.render({}))
+        self.response.write(template.render({'cheat_code_active': True}))
 
 
     @decorators.web_page(True)
