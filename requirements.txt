@@ -1,0 +1,8 @@
+Jinja2==2.8
+webapp2==2.5.2
+setuptools==18.5
+pycrypto==2.6.1
+cryptography==2.1.4
+ecdsa==0.13
+PasteScript==2.0.2
+simplejson==3.13.2
