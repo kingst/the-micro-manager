@@ -11,8 +11,10 @@ or you might need sudo
 then you need to install API credentials in the `creds.py` file, which
 should look something like this:
 
-```CLIENT_ID = 'NOT_A_REAL_ID'
-CLIENT_SECRET = 'NOT_A_REAL_SECRET'```
+```
+CLIENT_ID = 'NOT_A_REAL_ID'
+CLIENT_SECRET = 'NOT_A_REAL_SECRET'
+```
 
 the run the main python script
 
