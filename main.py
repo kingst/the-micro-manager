@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Main entry point for the top level app.
 """
