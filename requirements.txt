@@ -6,3 +6,5 @@ cryptography==2.1.4
 ecdsa==0.13
 PasteScript==2.0.2
 simplejson==3.13.2
+WebOb==1.7.4
+python-dateutil==1.5
